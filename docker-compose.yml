@@ -1,6 +1,7 @@
 version: '2'
 services:
   php-pubsub-kafka:
+    container_name: php_container
     build: .
     depends_on:
       - "kafka"
@@ -9,12 +10,14 @@ services:
     environment:
       KAFKA_BROKER: ${HOSTIP}
   zookeeper:
+    container_name: zookeeper_container
     image: confluentinc/cp-zookeeper:latest
     network_mode: host
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   kafka:
+    container_name: kafka_container
     image: confluentinc/cp-kafka:latest
     network_mode: host
     depends_on:
