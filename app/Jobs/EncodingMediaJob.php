@@ -10,10 +10,16 @@ namespace App\Jobs;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 
-class EncodingMediaJob
+class EncodingMediaJob extends Job implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable, SerializesModels;
+
     public $input;
     public $output;
 

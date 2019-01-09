@@ -70,6 +70,6 @@ class EncodeMedia extends Command
 
         $this->comment('File has been encoded');*/
 
-        EncodingMediaJob::dispatch($this->argument('input'), $this->argument('output'));
+        dispatch(new EncodingMediaJob($this->argument('input'), $this->argument('output')));
     }
 }
