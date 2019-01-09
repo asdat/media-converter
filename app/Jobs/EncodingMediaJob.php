@@ -1,48 +1,41 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: 1
+ * Date: 09.01.2019
+ * Time: 23:52
+ */
 
-namespace App\Console\Commands;
+namespace App\Jobs;
 
-use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Illuminate\Support\Facades\Artisan;
-use App\Jobs\EncodingMediaJob;
 
-class EncodeMedia extends Command
+
+class EncodingMediaJob
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'docker:run {input} {output}';
+    public $input;
+    public $output;
 
     /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Encode audio and video files to needed formats';
-
-    /**
-     * Create a new command instance.
+     * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($input, $output)
     {
-        parent::__construct();
+        $this->input = $input;
+        $this->output = $output;
     }
 
     /**
-     * Execute the console command.
+     * Execute the job.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
-        /*$this->comment('Encoding file...');
-        $inputArray = explode('.', $this->argument('output'));
+        $inputArray = explode('.', $this->output);
         $ext = $inputArray[count($inputArray) - 1];
 
         if ($ext === 'mp3') {
@@ -57,7 +50,7 @@ class EncodeMedia extends Command
             throw new \Exception('Unknown output file extension');
         }
 
-        $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch  -i ' . $this->argument('input') .  ' ' . $options . ' - > ' . $this->argument('output');
+        $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch  -i ' . $this->input .  ' ' . $options . ' - > ' . $this->output;
 
         $process = new Process($command);
         $process->setTimeout(3600);
@@ -67,9 +60,5 @@ class EncodeMedia extends Command
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-
-        $this->comment('File has been encoded');*/
-
-        EncodingMediaJob::dispatch($this->argument('input'), $this->argument('output'));
     }
 }
