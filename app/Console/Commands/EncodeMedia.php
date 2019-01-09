@@ -55,8 +55,8 @@ class EncodeMedia extends Command
         } else {
             throw new \Exception('Unknown output file extension');
         }
-        
-        $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch  -i ' . $this->argument('input') .  ' ' .$options .' - > ' . $this->argument('output');
+
+        $command = 'docker exec -it php_container docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch  -i ' . $this->argument('input') .  ' ' .$options .' - > ' . $this->argument('output');
 
         $process = new Process($command);
         $process->setTimeout(3600);
