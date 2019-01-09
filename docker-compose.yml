@@ -9,7 +9,7 @@ services:
       - ./:/opt/php-pubsub
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      KAFKA_BROKER: ${HOSTIP}
+      KAFKA_BROKER: 94.130.75.108
   zookeeper:
     container_name: zookeeper_container
     image: confluentinc/cp-zookeeper:latest
