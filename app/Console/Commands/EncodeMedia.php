@@ -14,7 +14,7 @@ class EncodeMedia extends Command
      *
      * @var string
      */
-    protected $signature = 'docker run {input} {output}';
+    protected $signature = 'docker {input} {output}';
 
     /**
      * The console command description.
