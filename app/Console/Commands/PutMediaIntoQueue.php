@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 1
- * Date: 09.01.2019
- * Time: 21:09
- */
 
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Jobs\EncodingMediaJob;
 
 class PutMediaIntoQueue extends Command
 {
@@ -17,7 +12,7 @@ class PutMediaIntoQueue extends Command
      *
      * @var string
      */
-    protected $signature = 'file:put {path} {id}';
+    protected $signature = 'file:put {--input=} {--id=} {--output-path=} {--queue=default}';
 
     /**
      * The console command description.
@@ -43,6 +38,7 @@ class PutMediaIntoQueue extends Command
      */
     public function handle()
     {
-
+        dispatch((new EncodingMediaJob($this->option('input'), $this->option('id'), $this->option('output-path')))
+            ->onQueue($this->option('queue')));
     }
 }

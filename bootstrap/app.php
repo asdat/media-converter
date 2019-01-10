@@ -100,4 +100,15 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+/*
+|--------------------------------------------------------------------------
+| Load The Application Configuration
+|--------------------------------------------------------------------------
+|
+| Next we will include configuration files from config directory.
+|
+*/
+
+$app->configure('media_encoding');
+
 return $app;
