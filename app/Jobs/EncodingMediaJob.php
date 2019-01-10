@@ -14,6 +14,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Log;
 
 
 class EncodingMediaJob extends Job implements ShouldQueue
@@ -41,7 +42,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $inputArray = explode('.', $this->output);
+        /*$inputArray = explode('.', $this->output);
         $ext = $inputArray[count($inputArray) - 1];
 
         if ($ext === 'mp3') {
@@ -65,6 +66,9 @@ class EncodingMediaJob extends Job implements ShouldQueue
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
-        }
+        }*/
+
+        Log::info($this->input);
+
     }
 }
