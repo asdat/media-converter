@@ -11,14 +11,14 @@ services:
     environment:
       KAFKA_BROKER: ${HOSTIP}
   zookeeper:
-    container_name: zookeeper_container
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     network_mode: host
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   kafka:
-    container_name: kafka_container
+    container_name: kafka
     image: confluentinc/cp-kafka:latest
     network_mode: host
     depends_on:
