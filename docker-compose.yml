@@ -11,27 +11,20 @@ services:
     environment:
       KAFKA_BROKER: ${HOSTIP}
   zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:latest
-    network_mode: host
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      image: wurstmeister/zookeeper:3.4.6
+      expose:
+      - "2181"
   kafka:
-    container_name: kafka
-    image: confluentinc/cp-kafka:latest
-    network_mode: host
+    image: wurstmeister/kafka:2.11-2.0.0
     depends_on:
-      - "zookeeper"
+    - zookeeper
+    ports:
+    - "9092:9092"
+    expose:
+    - "9093"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: ${HOSTIP}:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOSTIP}:9092
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: ${HOSTIP}:9092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: ${HOSTIP}:2181
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 2
-      CONFLUENT_METRICS_REPORTER_PUBLISH_MS: 1000
-      KAFKA_JMX_PORT: 7999
-      KAFKA_JMX_HOSTNAME: ${HOSTIP}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
