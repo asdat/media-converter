@@ -4,7 +4,7 @@ services:
       container_name: php_container
       build: .
       depends_on:
-        - "kafka"
+        - "broker"
       volumes:
         - ./:/opt/php-pubsub
         - /var/run/docker.sock:/var/run/docker.sock
@@ -45,16 +45,3 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-  schema-registry:
-    image: confluentinc/cp-schema-registry:5.1.0
-    hostname: schema-registry
-    container_name: schema-registry
-    depends_on:
-      - zookeeper
-      - broker
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
