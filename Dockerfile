@@ -1,7 +1,6 @@
 FROM php:7.2-fpm
 MAINTAINER Superbalist <tech+docker@superbalist.com>
 
-RUN mkdir /docker/php
 WORKDIR /docker/php
 
 # Packages
