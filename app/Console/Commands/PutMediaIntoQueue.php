@@ -7,6 +7,7 @@ use App\Jobs\EncodingMediaJob;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Log;
 
 class PutMediaIntoQueue extends Command
 {
