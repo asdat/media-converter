@@ -1,37 +1,35 @@
 version: '2'
 services:
-  php-pubsub-kafka:
-    container_name: php_container
+  php:
+    container_name: php
     build: .
-    depends_on:
-      - "kafka"
     volumes:
-      - ./:/opt/php-pubsub
+      - ./:/docker/php
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      KAFKA_BROKER: ${HOSTIP}
-  zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:latest
-    network_mode: host
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-  kafka:
-    container_name: kafka
-    image: confluentinc/cp-kafka:latest
-    network_mode: host
-    depends_on:
-      - "zookeeper"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: ${HOSTIP}:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOSTIP}:9092
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: ${HOSTIP}:9092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: ${HOSTIP}:2181
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 2
-      CONFLUENT_METRICS_REPORTER_PUBLISH_MS: 1000
-      KAFKA_JMX_PORT: 7999
-      KAFKA_JMX_HOSTNAME: ${HOSTIP}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+        - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+        - 3307:3306
+    depends_on:
+        - php
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+        MYSQL_DATABASE: ${DB_DATABASE}
+        MYSQL_USER: ${DB_USERNAME}
+        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        MYSQL_PASSWORD: ${DB_PASSWORD}
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8090:8080
+
