@@ -6,8 +6,6 @@ services:
     volumes:
       - ./:/docker/php
       - /var/run/docker.sock:/var/run/docker.sock
-    volumes_from:
-      - ffmpeg
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
@@ -34,9 +32,4 @@ services:
     restart: always
     ports:
       - 8090:8080
-  ffmpeg:
-    container_name: ffmpeg
-    image: jrottenberg/ffmpeg:3.4-scratch
-    volumes:
-      - /tmp/manager:/docker/php
 
