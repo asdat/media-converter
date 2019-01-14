@@ -13,8 +13,6 @@ services:
     image: mysql:8
     ports:
         - 3307:3306
-    volumes:
-        - ./docker/mysql:/var/lib/mysql
     depends_on:
         - php
     environment:
