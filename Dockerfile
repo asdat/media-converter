@@ -5,8 +5,6 @@ RUN mkdir /opt/php-pubsub
 WORKDIR /opt/php-pubsub
 
 # Packages
-RUN apt-get install php-mysql && apt-get install pdo-mysql
-
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         git \
@@ -24,10 +22,15 @@ RUN apt-get update \
         ) \
     && rm -r /var/lib/apt/lists/*
 
+RUN docker-php-ext-install mysqli
+RUN apt-get install php7.2-fpm php7.2-mysql
+
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
     && pecl install rdkafka \
     && docker-php-ext-enable rdkafka
+
+
 
 # Composer
 ENV COMPOSER_HOME /composer
