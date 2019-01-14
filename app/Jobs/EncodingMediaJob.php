@@ -86,6 +86,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
         foreach ($options as $extension => $option) {
             $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch -i ' . $this->inputFile . ' ' . $option . ' - > ' . $this->outputPath . $filename . '.' . $extension;
 
+            Log::info($command);
+
             $process = new Process(trim($command));
             $process->setTimeout(3600);
             $process->setIdleTimeout(3600);
