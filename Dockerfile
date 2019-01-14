@@ -5,7 +5,7 @@ RUN mkdir /opt/php-pubsub
 WORKDIR /opt/php-pubsub
 
 # Packages
-RUN docker-php-ext-install mysqli
+RUN apt-get install php7.2-mysql && apt-get install pdo-mysql
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
