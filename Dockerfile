@@ -22,8 +22,7 @@ RUN apt-get update \
         ) \
     && rm -r /var/lib/apt/lists/*
 
-RUN docker-php-ext-install mysqli
-RUN apt-get install php7.2-fpm php7.2-mysql
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
