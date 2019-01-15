@@ -6,7 +6,7 @@ services:
     volumes:
       - ./:/docker/php
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./docker/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
