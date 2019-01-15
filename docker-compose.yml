@@ -32,4 +32,9 @@ services:
     restart: always
     ports:
       - 8090:8080
+  supervisor:
+    image: dockerfile/supervisor
+    volumes:
+      - docker/supervisor/conf:/etc/supervisor/conf.d
+      - docker/supervisor/logs:/docker/supervisor/logs
 
