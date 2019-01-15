@@ -46,6 +46,5 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 # Install Composer Application Dependencies
 COPY . /docker/php
 RUN composer install --no-autoloader --no-scripts --no-interaction
-RUN composer require rapide/laravel-queue-kafka
 
 RUN composer dump-autoload --no-interaction
