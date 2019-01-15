@@ -28,13 +28,15 @@ services:
         MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
         MYSQL_PASSWORD: ${DB_PASSWORD}
   adminer:
+    container_name: adminer
     image: adminer
     restart: always
     ports:
       - 8090:8080
   supervisor:
+    container_name: supervisor
     image: dockerfile/supervisor
     volumes:
-      - docker/supervisor/conf:/etc/supervisor/conf.d
-      - docker/supervisor/logs:/docker/supervisor/logs
+      - ./docker/supervisor/conf:/etc/supervisor/conf.d
+      - ./docker/supervisor/logs:/docker/supervisor/logs
 
