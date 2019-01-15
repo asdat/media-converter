@@ -10,6 +10,7 @@ RUN apt-get update \
         zlib1g-dev \
         unzip \
         python \
+        supervisor \
         && ( \
             cd /tmp \
             && mkdir librdkafka \
@@ -24,8 +25,6 @@ RUN apt-get update \
 # MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-#Supervisor
-RUN apt-get install -y supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # PHP Extensions
@@ -50,5 +49,3 @@ RUN composer install --no-autoloader --no-scripts --no-interaction
 RUN composer require rapide/laravel-queue-kafka
 
 RUN composer dump-autoload --no-interaction
-
-CMD ["/usr/bin/supervisord"]
