@@ -25,7 +25,7 @@ RUN apt-get update \
 # MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
