@@ -1,8 +1,7 @@
 FROM php:7.2-fpm
 MAINTAINER Superbalist <tech+docker@superbalist.com>
 
-RUN mkdir /opt/php-pubsub
-WORKDIR /opt/php-pubsub
+WORKDIR /docker/php
 
 # Packages
 RUN apt-get update \
@@ -22,10 +21,14 @@ RUN apt-get update \
         ) \
     && rm -r /var/lib/apt/lists/*
 
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
     && pecl install rdkafka \
     && docker-php-ext-enable rdkafka
+
+
 
 # Composer
 ENV COMPOSER_HOME /composer
@@ -37,7 +40,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --version=1.1.0 && rm -rf /tmp/composer-setup.php
 
 # Install Composer Application Dependencies
-COPY . /opt/php-pubsub
+COPY . /docker/php
 RUN composer install --no-autoloader --no-scripts --no-interaction
 RUN composer require rapide/laravel-queue-kafka
 
