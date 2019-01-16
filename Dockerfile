@@ -1,4 +1,6 @@
+FROM jrottenberg/ffmpeg:3.4-scratch
 FROM php:7.2-fpm
+
 MAINTAINER Superbalist <tech+docker@superbalist.com>
 
 WORKDIR /docker/php
@@ -25,14 +27,16 @@ RUN apt-get update \
 # MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
+# Copy ffmpeg bins
+COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
+
+# Copy supervisord config
 COPY docker/supervisor2/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
     && pecl install rdkafka \
     && docker-php-ext-enable rdkafka
-
-
 
 # Composer
 ENV COMPOSER_HOME /composer
@@ -46,5 +50,4 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 # Install Composer Application Dependencies
 COPY . /docker/php
 RUN composer install --no-autoloader --no-scripts --no-interaction
-
 RUN composer dump-autoload --no-interaction

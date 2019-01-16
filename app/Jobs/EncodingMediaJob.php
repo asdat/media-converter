@@ -29,14 +29,21 @@ class EncodingMediaJob extends Job implements ShouldQueue
     public $inputFile;
 
     /**
-     * The directories path for the file output.
+     * File output data.
      *
      * @var string
      */
-    public $outputPath;
+    public $outputFile;
 
     /**
-     * Id of the input file for database.
+     * Encoding options.
+     *
+     * @var string
+     */
+    public $options;
+
+    /**
+     * Id of the input file for request.
      *
      * @var integer
      */
@@ -47,10 +54,11 @@ class EncodingMediaJob extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($inputFile, $id, $outputPath)
+    public function __construct($inputFile, $outputFile, $options, $id)
     {
         $this->inputFile = $inputFile;
-        $this->outputPath = $outputPath;
+        $this->outputFile = $outputFile;
+        $this->options = $options;
         $this->id = $id;
     }
 
@@ -61,47 +69,17 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $inputArray = explode('.', $this->inputFile);
-        $inputFileExtension = strtolower(trim(array_pop($inputArray)));
-        $filenameString = array_pop($inputArray);
-        $filenameArray = explode('/', $filenameString);
-        $filename = trim(array_pop($filenameArray));
+        $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $this->options . ' ' . $this->outputFile;
 
-        $allowedExtensions = config('media_encoding.allowed_extensions');
+        $process = new Process(trim($command));
+        $process->setTimeout(3600);
+        $process->setIdleTimeout(3600);
+        $process->run();
 
-        if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
-            $options = [
-                'mp3' => '-vn -ar 44100 -ac 2 -ab 192 -f mp3'
-            ];
-        } elseif (in_array($inputFileExtension, $allowedExtensions['video'])) {
-            $options = [
-                'mp4' => '-c:a aac -b:a 128k -c:v libx264 -crf 23 -f mp4',
-                'webm' => '-vcodec libvpx -qscale:v 5  -acodec libvorbis -qscale:a 5 -f webm',
-                'ogv' => '-codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
-            ];
-        } else {
-            throw new \Exception('Unknown output file extension');
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
         }
 
-        Log::info(date('H:i:s'));
-
-        /*foreach ($options as $extension => $option) {
-            $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch -i ' . $this->inputFile . ' ' . $option . ' - > ' . $this->outputPath . $filename . '.' . $extension;
-
-            Log::info($command);
-
-            $process = new Process(trim($command));
-            $process->setTimeout(3600);
-            $process->setIdleTimeout(3600);
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-
-            Log::info($command);
-
-            // TODO: Send API-request
-        }*/
+        // TODO: Send API-request
     }
 }
