@@ -27,7 +27,7 @@ RUN apt-get update \
 # MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-COPY --from=0 /usr/local /usr/local
+COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
 
 COPY docker/supervisor2/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
