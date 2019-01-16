@@ -14,8 +14,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\File;
 use Log;
-use File;
 
 
 class EncodingMediaJob extends Job implements ShouldQueue
