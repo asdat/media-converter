@@ -5,8 +5,9 @@ MAINTAINER Superbalist <tech+docker@superbalist.com>
 WORKDIR /docker/php
 
 #установка пакетов php внутри контейнера
-RUN apt-get update
-RUN apt-get install -y curl php7.2 php7.2-fpm php7.2-mysql php7.2-curl php7.2-mbstring
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+         curl php7.2 php7.2-fpm php7.2-mysql php7.2-curl php7.2-mbstring
 
 #Изменяем доступность php-fpm чтобы слушалось не только в localhost
 RUN sed -i 's@listen = /run/php/php7.2-fpm.sock@listen = 9011@'  /etc/php/7.2/fpm/pool.d/www.conf
