@@ -96,7 +96,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
                 throw new \ErrorException('Directory ' . $path . ' is not writable');
             }
 
-            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' - > output/' . $this->outputPath  . '/' . $filename . '.' . $extension;
+            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' output/' . $this->outputPath  . '/' . $filename . '.' . $extension;
 
             Log::info($command);
 
