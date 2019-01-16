@@ -81,22 +81,32 @@ class EncodingMediaJob extends Job implements ShouldQueue
                 'ogv' => '-codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
             ];
         } else {
-            throw new \Exception('Unknown output file extension');
+            throw new \ErrorException('Unknown output file extension');
+        }
+
+        $path = 'output/' . $this->outputPath;
+        $lastPathSymbol = substr($this->outputPath, -1);
+        if ($lastPathSymbol !== '/') {
+            $path .= '/';
+        }
+
+        if (!File::exists($path)) {
+            if (!File::makeDirectory($path,  0755, true)) {
+                throw new \ErrorException('Cannot create directory ' . $path);
+            }
+        }
+
+        if (!File::isDirectory($path) && File::isWritable($path)) {
+            throw new \ErrorException('Directory ' . $path . ' is not writable');
         }
 
         foreach ($options as $extension => $option) {
-            $path = 'output/' . $this->outputPath;
-            if (!File::exists($path)) {
-                if (!File::makeDirectory($path,  0755, true)) {
-                    throw new \ErrorException('Cannot create directory ' . $path);
-                }
+            $newFile = $filename . '.' . $extension;
+            if (File::exists($path . $newFile)) {
+                throw new \ErrorException('File ' . $newFile . ' already exists in directory ' . $path);
             }
 
-            if (!File::isDirectory($path) && File::isWritable($path)) {
-                throw new \ErrorException('Directory ' . $path . ' is not writable');
-            }
-
-            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' output/' . $this->outputPath  . '/' . $filename . '.' . $extension;
+            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' ' . $path . $newFile;
 
             Log::info($command);
 
