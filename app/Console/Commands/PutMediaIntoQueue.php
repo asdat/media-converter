@@ -58,7 +58,7 @@ class PutMediaIntoQueue extends Command
                 'ogv' => '-codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
             ];
         } else {
-            throw new \ErrorException('Unresolved input file extension ' . $inputFileExtension);
+            throw new \ErrorException('Unresolved input file extension: ' . $inputFileExtension);
         }
 
         $path = 'output/' . $this->option('output-path');
@@ -69,7 +69,7 @@ class PutMediaIntoQueue extends Command
 
         if (!File::exists($path)) {
             if (!File::makeDirectory($path,  0755, true)) {
-                throw new \ErrorException('Cannot create directory ' . $path);
+                throw new \ErrorException('Cannot create directory: ' . $path);
             }
         }
 
@@ -94,11 +94,11 @@ class PutMediaIntoQueue extends Command
 
     private function glueFileNameAndExtension($name, $ext)
     {
-        return $name . $ext;
+        return $name . '.' . $ext;
     }
 
     private function glueFilePathNameAndExtension($path, $name, $ext)
     {
-        return $path . $name . $ext;
+        return $path . $this->glueFileNameAndExtension($name, $ext);
     }
 }
