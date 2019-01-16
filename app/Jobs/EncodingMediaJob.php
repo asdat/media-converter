@@ -81,7 +81,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
                 'ogv' => '-codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
             ];
         } else {
-            throw new \ErrorException('Unknown output file extension');
+            throw new \ErrorException('Unresolved input file extension ' . $inputFileExtension);
         }
 
         $path = 'output/' . $this->outputPath;
@@ -107,8 +107,6 @@ class EncodingMediaJob extends Job implements ShouldQueue
             }
 
             $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' ' . $path . $newFile;
-
-            Log::info($command);
 
             $process = new Process(trim($command));
             $process->setTimeout(3600);
