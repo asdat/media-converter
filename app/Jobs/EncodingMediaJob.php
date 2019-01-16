@@ -83,10 +83,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
             throw new \Exception('Unknown output file extension');
         }
 
-        Log::info(date('H:i:s'));
-
-        /*foreach ($options as $extension => $option) {
-            $command = 'docker run -v $PWD:/tmp jrottenberg/ffmpeg:3.4-scratch -i ' . $this->inputFile . ' ' . $option . ' - > ' . $this->outputPath . $filename . '.' . $extension;
+        foreach ($options as $extension => $option) {
+            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' - > output/' . $this->outputPath  . '/' . $filename . '.' . $extension;
 
             Log::info($command);
 
@@ -99,9 +97,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
                 throw new ProcessFailedException($process);
             }
 
-            Log::info($command);
-
             // TODO: Send API-request
-        }*/
+        }
     }
 }
