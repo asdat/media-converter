@@ -1,5 +1,5 @@
-FROM php:7.2-fpm
 FROM jrottenberg/ffmpeg:3.4-scratch
+FROM php:7.2-fpm
 
 MAINTAINER Superbalist <tech+docker@superbalist.com>
 
