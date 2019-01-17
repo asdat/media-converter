@@ -83,7 +83,7 @@ class PutMediaIntoQueue extends Command
         try {
             $response = $client->request('GET', $this->option('input'));
         } catch (\Exception $e) {
-            throw new \ErrorException ($e);
+            throw new \ErrorException ($e->getRequest());
         }
         $status = $response->getStatusCode();
         if ($status !== 200) {
