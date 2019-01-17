@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Jobs\EncodingMediaJob;
 use Illuminate\Support\Facades\File;
+use \GuzzleHttp\Client;
 
 class PutMediaIntoQueue extends Command
 {
@@ -75,6 +76,13 @@ class PutMediaIntoQueue extends Command
 
         if (!File::isDirectory($path) && File::isWritable($path)) {
             throw new \ErrorException('Directory ' . $path . ' is not writable');
+        }
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $this->option('input'));
+        $status = $response->getStatusCode();
+        if ($status !== 200) {
+            throw new \ErrorException('Input file is available');
         }
 
         foreach ($options as $extension => $option) {
