@@ -89,6 +89,13 @@ class PutMediaIntoQueue extends Command
         }
 
         foreach ($options as $extension => $option) {
+            $newFile = $this->getFileNameAndExtension($filename, $extension);
+            if (File::exists($path . $newFile)) {
+                File::delete($path . $newFile);
+            }
+        }
+
+        foreach ($options as $extension => $option) {
             $fullFile = $this->getFullFileData($path, $filename, $extension);
 
             dispatch((new EncodingMediaJob($this->option('input'), $fullFile, $option, $this->option('id'), $outputExtensionsArray))
@@ -96,8 +103,13 @@ class PutMediaIntoQueue extends Command
         }
     }
 
+    private function getFilenameAndExtension($name, $ext)
+    {
+        return $name . '.' . $ext;
+    }
+
     private function getFullFileData($path, $name, $ext)
     {
-        return $path . $name . '.' . $ext;
+        return $path . $this->getFileNameAndExtension($name, $ext);
     }
 }
