@@ -14,12 +14,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\File;
+use \GuzzleHttp\Client;
 use Log;
 
 
 class EncodingMediaJob extends Job implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Media encoding configuration.
+     *
+     * @var array
+     */
+    protected $config;
 
     /**
      * The full path (url) of the input file.
@@ -45,7 +54,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
     /**
      * Id of the input file for request.
      *
-     * @var integer
+     * @var string
      */
     public $id;
 
@@ -56,6 +65,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function __construct($inputFile, $outputFile, $options, $id)
     {
+        $this->config = config('media_encoding');
         $this->inputFile = $inputFile;
         $this->outputFile = $outputFile;
         $this->options = $options;
@@ -80,6 +90,37 @@ class EncodingMediaJob extends Job implements ShouldQueue
             throw new ProcessFailedException($process);
         }
 
-        // TODO: Send API-request
+        $inputArray = explode('.', $this->inputFile);
+        $inputFileExtension = strtolower(trim(array_pop($inputArray)));
+        $allowedExtensions = $this->config['allowed_input_extensions'];
+
+        if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
+            $outputExtGroup = array_keys($this->config['output_options']['audio']);
+        } else {
+            $outputExtGroup = array_keys($this->config['output_options']['video']);
+        }
+
+        $outputFileWithoutExtension = explode('.', $this->outputFile);
+        array_pop($outputFileWithoutExtension);
+        $outputFileWithoutExtension = implode('.', $outputFileWithoutExtension);
+
+        $sendRequestFlag = true;
+        foreach ($outputExtGroup as $extension) {
+            if (!File::exists($outputFileWithoutExtension . '.' . $extension)) {
+                $sendRequestFlag = false;
+                break;
+            }
+        }
+
+        $client = new Client();
+        try {
+            $client->request(config('external_api.request_method'), config('external_api.url'), [
+                'id' => $this->id
+            ]);
+
+            Log::info('File ' . $this->outputFile . ' was encoded.');
+        } catch (\Exception $e) {
+            Log::error('Request was not sended at ' . date('H:i:s' . ' for file ' . $this->outputFile));
+        }
     }
 }

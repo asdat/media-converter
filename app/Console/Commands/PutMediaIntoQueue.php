@@ -10,6 +10,13 @@ use \GuzzleHttp\Client;
 class PutMediaIntoQueue extends Command
 {
     /**
+     * Media encoding configuration.
+     *
+     * @var array
+     */
+    protected $config;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -30,6 +37,7 @@ class PutMediaIntoQueue extends Command
      */
     public function __construct()
     {
+        $this->config = config('media_encoding');
         parent::__construct();
     }
 
@@ -46,21 +54,16 @@ class PutMediaIntoQueue extends Command
         $filenameArray = explode('/', $filenameString);
         $filename = trim(array_pop($filenameArray));
 
-        $allowedExtensions = config('media_encoding.allowed_extensions');
-
+        $allowedExtensions = $this->config['allowed_input_extensions'];
         if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
-            $options = [
-                'mp3' => '-y -vn -ar 44100 -ac 2 -ab 192 -f mp3'
-            ];
+            $options = $this->config['output_options']['audio'];
         } elseif (in_array($inputFileExtension, $allowedExtensions['video'])) {
-            $options = [
-                'mp4' => '-y -c:a aac -b:a 128k -c:v libx264 -crf 23 -f mp4',
-                'webm' => '-y -vcodec libvpx -qscale:v 5  -acodec libvorbis -qscale:a 5 -f webm',
-                'ogv' => '-y -codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
-            ];
+            $options = $this->config['output_options']['video'];
         } else {
             throw new \ErrorException('Unresolved input file extension: ' . $inputFileExtension);
         }
+
+        $outputExtensionsArray = array_keys($options);
 
         $path = 'output/' . $this->option('output-path');
         $lastPathSymbol = substr($this->option('output-path'), -1);
@@ -78,30 +81,23 @@ class PutMediaIntoQueue extends Command
             throw new \ErrorException('Directory ' . $path . ' is not writable');
         }
 
-        $client = new \GuzzleHttp\Client();
-
+        $client = new Client();
         try {
             $client->request('GET', $this->option('input'));
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new \ErrorException('Input file is available. ' . $e->getMessage());
         }
 
         foreach ($options as $extension => $option) {
-            $fullFile = $this->glueFilePathNameAndExtension($path, $filename, $extension);
+            $fullFile = $this->getFullFileData($path, $filename, $extension);
 
-            dispatch((new EncodingMediaJob($this->option('input'), $fullFile, $option, $this->option('id')))
+            dispatch((new EncodingMediaJob($this->option('input'), $fullFile, $option, $this->option('id'), $outputExtensionsArray))
                 ->onQueue('default'));
         }
     }
 
-    private function glueFileNameAndExtension($name, $ext)
+    private function getFullFileData($path, $name, $ext)
     {
-        return $name . '.' . $ext;
-    }
-
-    private function glueFilePathNameAndExtension($path, $name, $ext)
-    {
-        return $path . $this->glueFileNameAndExtension($name, $ext);
+        return $path . $name . '.' . $ext;
     }
 }
