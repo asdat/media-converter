@@ -112,15 +112,17 @@ class EncodingMediaJob extends Job implements ShouldQueue
             }
         }
 
-        $client = new Client();
-        try {
-            $client->request(config('external_api.request_method'), config('external_api.url'), [
-                'id' => $this->id
-            ]);
+        if ($sendRequestFlag) {
+            $client = new Client();
+            try {
+                $client->request(config('external_api.request_method'), config('external_api.url'), [
+                    'id' => $this->id
+                ]);
 
-            Log::info('File ' . $this->outputFile . ' was encoded.');
-        } catch (\Exception $e) {
-            Log::error('Request was not sended at ' . date('H:i:s' . ' for file ' . $this->outputFile));
+                Log::info('File ' . $this->outputFile . ' was encoded.');
+            } catch (\Exception $e) {
+                Log::error('Request was not sended at ' . date('H:i:s' . ' for file ' . $this->outputFile));
+            }
         }
     }
 }
