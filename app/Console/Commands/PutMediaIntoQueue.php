@@ -81,13 +81,10 @@ class PutMediaIntoQueue extends Command
         $client = new \GuzzleHttp\Client();
 
         try {
-            $response = $client->request('GET', $this->option('input'));
-        } catch (\Exception $e) {
-            throw new \ErrorException ($e->getRequest());
+            $client->request('GET', $this->option('input'));
         }
-        $status = $response->getStatusCode();
-        if ($status !== 200) {
-            throw new \ErrorException('Input file is available');
+        catch (\Exception $e) {
+            throw new \ErrorException('Input file is available. ' . $e->getMessage());
         }
 
         foreach ($options as $extension => $option) {
