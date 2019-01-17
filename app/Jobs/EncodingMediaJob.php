@@ -106,6 +106,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
 
         $sendRequestFlag = true;
         foreach ($outputExtGroup as $extension) {
+            Log::info($outputFileWithoutExtension . '.' . $extension . ' + ' . $sendRequestFlag);
             if (!File::exists($outputFileWithoutExtension . '.' . $extension)) {
                 $sendRequestFlag = false;
                 break;
