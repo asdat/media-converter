@@ -49,13 +49,13 @@ class PutMediaIntoQueue extends Command
 
         if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
             $options = [
-                'mp3' => '-vn -ar 44100 -ac 2 -ab 192 -f mp3'
+                'mp3' => '-y -vn -ar 44100 -ac 2 -ab 192 -f mp3'
             ];
         } elseif (in_array($inputFileExtension, $allowedExtensions['video'])) {
             $options = [
-                'mp4' => '-c:a aac -b:a 128k -c:v libx264 -crf 23 -f mp4',
-                'webm' => '-vcodec libvpx -qscale:v 5  -acodec libvorbis -qscale:a 5 -f webm',
-                'ogv' => '-codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
+                'mp4' => '-y -c:a aac -b:a 128k -c:v libx264 -crf 23 -f mp4',
+                'webm' => '-y -vcodec libvpx -qscale:v 5  -acodec libvorbis -qscale:a 5 -f webm',
+                'ogv' => '-y -codec:v libtheora -qscale:v 5 -codec:a libvorbis -qscale:a 5 -f ogg',
             ];
         } else {
             throw new \ErrorException('Unresolved input file extension: ' . $inputFileExtension);
@@ -75,13 +75,6 @@ class PutMediaIntoQueue extends Command
 
         if (!File::isDirectory($path) && File::isWritable($path)) {
             throw new \ErrorException('Directory ' . $path . ' is not writable');
-        }
-
-        foreach ($options as $extension => $option) {
-            $newFile = $this->glueFileNameAndExtension($filename, $extension);
-            if (File::exists($path . $newFile)) {
-                throw new \ErrorException('File ' . $newFile . ' already exists in directory ' . $path);
-            }
         }
 
         foreach ($options as $extension => $option) {
