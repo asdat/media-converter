@@ -14,7 +14,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\File;
 use \GuzzleHttp\Client;
 use Log;
 
@@ -92,8 +91,9 @@ class EncodingMediaJob extends Job implements ShouldQueue
 
     private function getFileName($file)
     {
+        $fileArray = explode('.', $file);
         $this->getFileExtension($file);
-        $filenameString = array_pop($file);
+        $filenameString = array_pop($fileArray);
         $filenameArray = explode('/', $filenameString);
 
         return trim(array_pop($filenameArray));
@@ -126,7 +126,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
         $client = new Client();
         try {
             $response = $client->request('POST', config('external_api.url'), [
-                'id' => $this->id
+                'body' => $this->id
             ]);
 
             $status = $response->getStatusCode();
