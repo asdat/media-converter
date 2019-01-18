@@ -8,7 +8,7 @@ return [
         'not available file' => 'Input file is not available. :message',
     ],
     'logs' => [
-        'request_sending_success' => 'Request was sended successfully to :url',
+        'request_sending_success' => 'Request was sended successfully to :url with file id = :id',
         'request_sending_failure' => 'Request sending to :url failed',
     ],
 ];

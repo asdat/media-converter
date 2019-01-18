@@ -131,7 +131,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
             $status = $response->getStatusCode();
             if ($status === 200) {
                 Log::info(__('messages.logs.request_sending_success', [
-                    'url' => config('external_api.url')
+                    'url' => config('external_api.url'),
+                    'id' => $this->id
                 ]));
             } else {
                 Log::error(__('messages.logs.request_sending_failure', [
