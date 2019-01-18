@@ -92,7 +92,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
     private function getFileName($file)
     {
         $fileArray = explode('.', $file);
-        $filenameString = array_pop(array_pop($fileArray));
+        $filenameString = $fileArray[count($fileArray) - 2];
         $filenameArray = explode('/', $filenameString);
 
         return trim(array_pop($filenameArray));
