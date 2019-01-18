@@ -48,68 +48,52 @@ class PutMediaIntoQueue extends Command
      */
     public function handle()
     {
-        $inputArray = explode('.', $this->option('input'));
-        $inputFileExtension = strtolower(trim(array_pop($inputArray)));
-        $filenameString = array_pop($inputArray);
-        $filenameArray = explode('/', $filenameString);
-        $filename = trim(array_pop($filenameArray));
-
+        $inputFileExtension = $this->getFileExtension($this->option('input'));
         $allowedExtensions = $this->config['allowed_input_extensions'];
-        if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
-            $options = $this->config['output_options']['audio'];
-        } elseif (in_array($inputFileExtension, $allowedExtensions['video'])) {
-            $options = $this->config['output_options']['video'];
-        } else {
-            throw new \ErrorException('Unresolved input file extension: ' . $inputFileExtension);
+
+        if (!in_array($inputFileExtension, $allowedExtensions['audio']) && !in_array($inputFileExtension, $allowedExtensions['video'])) {
+            throw new \ErrorException(__('messages.exceptions.unresolved_extension', [
+                'extension' => $inputFileExtension
+            ]));
         }
 
-        $outputExtensionsArray = array_keys($options);
-
-        $path = 'output/' . $this->option('output-path');
+        $outputPath = 'output/' . $this->option('output-path');
         $lastPathSymbol = substr($this->option('output-path'), -1);
         if ($lastPathSymbol !== '/') {
-            $path .= '/';
+            $outputPath .= '/';
         }
 
-        if (!File::exists($path)) {
-            if (!File::makeDirectory($path,  0755, true)) {
-                throw new \ErrorException('Cannot create directory: ' . $path);
+        if (!File::exists($outputPath)) {
+            if (!File::makeDirectory($outputPath,  0755, true)) {
+                throw new \ErrorException(__('messages.exceptions.directory_creation_failure', [
+                    'directory' => $outputPath
+                ]));
             }
         }
 
-        if (!File::isDirectory($path) && File::isWritable($path)) {
-            throw new \ErrorException('Directory ' . $path . ' is not writable');
+        if (!File::isDirectory($outputPath) || !File::isWritable($outputPath)) {
+            throw new \ErrorException(__('messages.exceptions.not_writable_directory', [
+                'directory' => $outputPath
+            ]));
         }
 
         $client = new Client();
         try {
             $client->request('GET', $this->option('input'));
         } catch (\Exception $e) {
-            throw new \ErrorException('Input file is available. ' . $e->getMessage());
+            throw new \ErrorException(__('messages.exceptions.not available file', [
+                'message' => $e->getMessage()
+            ]));
         }
 
-        foreach ($options as $extension => $option) {
-            $newFile = $this->getFileNameAndExtension($filename, $extension);
-            if (File::exists($path . $newFile)) {
-                File::delete($path . $newFile);
-            }
-        }
-
-        foreach ($options as $extension => $option) {
-            $fullFile = $this->getFullFileData($path, $filename, $extension);
-
-            dispatch((new EncodingMediaJob($this->option('input'), $fullFile, $option, $this->option('id'), $outputExtensionsArray))
-                ->onQueue('default'));
-        }
+        dispatch((new EncodingMediaJob($this->option('input'), $outputPath, $this->option('id')))
+            ->onQueue('default'));
     }
 
-    private function getFilenameAndExtension($name, $ext)
+    private function getFileExtension($file)
     {
-        return $name . '.' . $ext;
-    }
+        $fileArray = explode('.', $file);
 
-    private function getFullFileData($path, $name, $ext)
-    {
-        return $path . $this->getFileNameAndExtension($name, $ext);
+        return strtolower(trim(array_pop($fileArray)));
     }
 }

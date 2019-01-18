@@ -38,18 +38,11 @@ class EncodingMediaJob extends Job implements ShouldQueue
     public $inputFile;
 
     /**
-     * File output data.
+     * Path for output file.
      *
      * @var string
      */
-    public $outputFile;
-
-    /**
-     * Encoding options.
-     *
-     * @var string
-     */
-    public $options;
+    public $outputPath;
 
     /**
      * Id of the input file for request.
@@ -63,12 +56,11 @@ class EncodingMediaJob extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($inputFile, $outputFile, $options, $id)
+    public function __construct($inputFile, $outputPath, $id)
     {
         $this->config = config('media_encoding');
         $this->inputFile = $inputFile;
-        $this->outputFile = $outputFile;
-        $this->options = $options;
+        $this->outputPath = $outputPath;
         $this->id = $id;
     }
 
@@ -79,8 +71,46 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $this->options . ' ' . $this->outputFile;
+        $inputFileExtension = $this->getFileExtension($this->inputFile);
+        $options = $this->getEncodingOptions($inputFileExtension);
+        $inputFilename = $this->getFileName($this->inputFile);
 
+        foreach ($options as $extension => $option) {
+            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' ' . $this->outputPath . $inputFilename . '.' . $extension;
+            $this->runCommand($command);
+        }
+
+        $this->sendApiRequest();
+    }
+
+    private function getFileExtension($file)
+    {
+        $fileArray = explode('.', $file);
+
+        return strtolower(trim(array_pop($fileArray)));
+    }
+
+    private function getFileName($file)
+    {
+        $this->getFileExtension($file);
+        $filenameString = array_pop($file);
+        $filenameArray = explode('/', $filenameString);
+
+        return trim(array_pop($filenameArray));
+    }
+
+    private function getEncodingOptions($extension)
+    {
+        $allowedExtensions = $this->config['allowed_input_extensions'];
+        if (in_array($extension, $allowedExtensions['audio'])) {
+            return $this->config['output_options']['audio'];
+        } elseif (in_array($extension, $allowedExtensions['video'])) {
+            return $this->config['output_options']['video'];
+        }
+    }
+
+    private function runCommand($command)
+    {
         $process = new Process(trim($command));
         $process->setTimeout(3600);
         $process->setIdleTimeout(3600);
@@ -89,40 +119,30 @@ class EncodingMediaJob extends Job implements ShouldQueue
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
+    }
 
-        $inputArray = explode('.', $this->inputFile);
-        $inputFileExtension = strtolower(trim(array_pop($inputArray)));
-        $allowedExtensions = $this->config['allowed_input_extensions'];
+    private function sendApiRequest()
+    {
+        $client = new Client();
+        try {
+            $response = $client->request('POST', config('external_api.url'), [
+                'id' => $this->id
+            ]);
 
-        if (in_array($inputFileExtension, $allowedExtensions['audio'])) {
-            $outputExtGroup = array_keys($this->config['output_options']['audio']);
-        } else {
-            $outputExtGroup = array_keys($this->config['output_options']['video']);
-        }
-
-        $outputFileWithoutExtension = explode('.', $this->outputFile);
-        array_pop($outputFileWithoutExtension);
-        $outputFileWithoutExtension = implode('.', $outputFileWithoutExtension);
-
-        $sendRequestFlag = true;
-        foreach ($outputExtGroup as $extension) {
-            if (!File::exists($outputFileWithoutExtension . '.' . $extension)) {
-                $sendRequestFlag = false;
-                break;
+            $status = $response->getStatusCode();
+            if ($status === 200) {
+                Log::info(__('messages.logs.request_sending_success', [
+                    'url' => config('external_api.url')
+                ]));
+            } else {
+                Log::error(__('messages.logs.request_sending_failure', [
+                    'url' => config('external_api.url')
+                ]));
             }
-        }
-
-        if ($sendRequestFlag) {
-            $client = new Client();
-            try {
-                $client->request(config('external_api.request_method'), config('external_api.url'), [
-                    'id' => $this->id
-                ]);
-
-                Log::info('File ' . $this->outputFile . ' was encoded.');
-            } catch (\Exception $e) {
-                Log::error('Request was not sended at ' . date('H:i:s' . ' for file ' . $this->outputFile));
-            }
+        } catch (\Exception $e) {
+            Log::error(__('messages.logs.request_sending_failure', [
+                'url' => config('external_api.url')
+            ]));
         }
     }
 }
