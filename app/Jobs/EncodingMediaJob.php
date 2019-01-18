@@ -22,6 +22,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 3600;
+
     /**
      * Media encoding configuration.
      *
@@ -70,6 +72,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
+        ini_set('max_execution_time', -1);
+
         $inputFileExtension = $this->getFileExtension($this->inputFile);
         $options = $this->getEncodingOptions($inputFileExtension);
         $inputFilename = $this->getFileName($this->inputFile);
