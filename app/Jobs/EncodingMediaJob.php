@@ -132,7 +132,9 @@ class EncodingMediaJob extends Job implements ShouldQueue
         $client = new Client();
         try {
             $response = $client->request('POST', config('external_api.url'), [
-                'body' => $this->id
+                'form_params' => [
+                    'id' => $this->id,
+                ]
             ]);
 
             $status = $response->getStatusCode();
