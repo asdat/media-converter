@@ -22,8 +22,6 @@ class EncodingMediaJob extends Job implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 3600;
-
     /**
      * Media encoding configuration.
      *
@@ -72,8 +70,6 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
-        ini_set('max_execution_time', -1);
-
         $inputFileExtension = $this->getFileExtension($this->inputFile);
         $options = $this->getEncodingOptions($inputFileExtension);
         $inputFilename = $this->getFileName($this->inputFile);
@@ -114,14 +110,18 @@ class EncodingMediaJob extends Job implements ShouldQueue
 
     private function runCommand($command)
     {
-        $process = new Process(trim($command));
-        $process->setTimeout(3600);
-        $process->setIdleTimeout(3600);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        try {
+            $process = new Process(trim($command));
+            $process->setTimeout(3600);
+            $process->setIdleTimeout(3600);
+            $process->run();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
+
+        /*if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }*/
     }
 
     private function sendApiRequest()
