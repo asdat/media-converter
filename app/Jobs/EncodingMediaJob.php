@@ -77,17 +77,13 @@ class EncodingMediaJob extends Job implements ShouldQueue
      */
     public function handle()
     {
-        try {
-            $inputFileExtension = $this->getFileExtension($this->inputFile);
-            $options = $this->getEncodingOptions($inputFileExtension);
-            $inputFilename = $this->getFileName($this->inputFile);
+        $inputFileExtension = $this->getFileExtension($this->inputFile);
+        $options = $this->getEncodingOptions($inputFileExtension);
+        $inputFilename = $this->getFileName($this->inputFile);
 
-            foreach ($options as $extension => $option) {
-                $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' ' . $this->outputPath . $inputFilename . '.' . $extension;
-                $this->runCommand($command);
-            }
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        foreach ($options as $extension => $option) {
+            $command = 'ffmpeg -i ' . $this->inputFile . ' ' . $option . ' ' . $this->outputPath . $inputFilename . '.' . $extension;
+            $this->runCommand($command);
         }
 
         //$this->sendApiRequest();

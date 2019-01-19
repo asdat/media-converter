@@ -17,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Queue::after(function (JobProcessed $event) {
+            Log::info('test');
             // $event->connectionName
             // $event->job
             // $event->job->payload()
