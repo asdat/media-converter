@@ -27,7 +27,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 250;
+    public $tries = 3;
 
     /**
      * Media encoding configuration.
@@ -86,7 +86,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
             $this->runCommand($command);
         }
 
-        //$this->sendApiRequest();
+        $this->sendApiRequest();
     }
 
     private function getFileExtension($file)
@@ -117,18 +117,14 @@ class EncodingMediaJob extends Job implements ShouldQueue
 
     private function runCommand($command)
     {
-        try {
-            $process = new Process(trim($command));
-            $process->setTimeout(28800);
-            $process->setIdleTimeout(28800);
-            $process->run();
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        $process = new Process(trim($command));
+        $process->setTimeout(28800);
+        $process->setIdleTimeout(28800);
+        $process->run();
 
-        /*if (!$process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
-        }*/
+        }
     }
 
     private function sendApiRequest()
