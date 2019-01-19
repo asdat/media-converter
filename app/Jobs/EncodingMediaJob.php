@@ -27,7 +27,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 6;
+    public $tries = 250;
 
     /**
      * Media encoding configuration.
