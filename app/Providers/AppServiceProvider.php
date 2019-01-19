@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 if ($status === 200) {
                     Log::info(__('messages.logs.request_sending_success', [
                         'url' => config('external_api.url'),
-                        'id' => $event->job->payload()
+                        'id' =>  print_r($event->job->payload(), TRUE)
                     ]));
                 } else {
                     Log::error(__('messages.logs.request_sending_failure', [
