@@ -119,8 +119,8 @@ class EncodingMediaJob extends Job implements ShouldQueue
     {
         try {
             $process = new Process(trim($command));
-            $process->setTimeout(3600);
-            $process->setIdleTimeout(3600);
+            $process->setTimeout(28800);
+            $process->setIdleTimeout(28800);
             $process->run();
         } catch (\Exception $e) {
             Log::error($e->getMessage());

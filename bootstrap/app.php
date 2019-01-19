@@ -111,5 +111,6 @@ $app->router->group([
 
 $app->configure('media_encoding');
 $app->configure('external_api');
+$app->configure('queue');
 
 return $app;
