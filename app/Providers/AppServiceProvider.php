@@ -24,14 +24,14 @@ class AppServiceProvider extends ServiceProvider
             $client = new \GuzzleHttp\Client();
             try {
                 $response = $client->request('POST', config('external_api.url'), [
-                    'body' => $event->job->id
+                    'body' => $event->job->payload()
                 ]);
 
                 $status = $response->getStatusCode();
                 if ($status === 200) {
                     Log::info(__('messages.logs.request_sending_success', [
                         'url' => config('external_api.url'),
-                        //'id' => $this->id
+                        'id' => $event->job->payload()
                     ]));
                 } else {
                     Log::error(__('messages.logs.request_sending_failure', [
