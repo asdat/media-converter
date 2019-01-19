@@ -23,6 +23,13 @@ class EncodingMediaJob extends Job implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 6;
+
+    /**
      * Media encoding configuration.
      *
      * @var array
@@ -79,7 +86,7 @@ class EncodingMediaJob extends Job implements ShouldQueue
             $this->runCommand($command);
         }
 
-        $this->sendApiRequest();
+        //$this->sendApiRequest();
     }
 
     private function getFileExtension($file)
