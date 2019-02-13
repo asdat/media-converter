@@ -23,7 +23,8 @@ COPY docker/supervisor2/conf.d/supervisord.conf /etc/supervisor/conf.d/superviso
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
-    && docker-php-ext-install bcmath
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install sockets
 
 # Composer
 ENV COMPOSER_HOME /composer
