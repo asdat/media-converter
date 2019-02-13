@@ -24,9 +24,6 @@ RUN apt-get update \
         ) \
     && rm -r /var/lib/apt/lists/*
 
-# MySQL
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
 # Copy ffmpeg bins
 COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
 
