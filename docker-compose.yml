@@ -9,31 +9,18 @@ services:
       - ./docker/supervisor2/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     ports:
       - 9001:9001
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-  mysql:
-    container_name: mysql
-    image: mysql:5.7
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.7.5-management
+    hostname: app-rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-        - 3307:3306
-    depends_on:
-        - php
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+        - ./data/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     environment:
-        MYSQL_DATABASE: ${DB_DATABASE}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8090:8080
+        RABBITMQ_ERLANG_COOKIE: 6085e2412b6fa88647466c6a81c0cea0
+        RABBITMQ_DEFAULT_USER: rabbitmq
+        RABBITMQ_DEFAULT_PASS: rabbitmq
+        RABBITMQ_DEFAULT_VHOST: /
 
