@@ -13,15 +13,6 @@ RUN apt-get update \
         unzip \
         python \
         supervisor \
-        && ( \
-            cd /tmp \
-            && mkdir librdkafka \
-            && cd librdkafka \
-            && git clone https://github.com/edenhill/librdkafka.git . \
-            && ./configure \
-            && make \
-            && make install \
-        ) \
     && rm -r /var/lib/apt/lists/*
 
 # Copy ffmpeg bins
@@ -32,10 +23,8 @@ COPY docker/supervisor2/conf.d/supervisord.conf /etc/supervisor/conf.d/superviso
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
-    && pecl install rdkafka \
-    && docker-php-ext-enable rdkafka
     && docker-php-ext-install bcmath
-    
+
 # Composer
 ENV COMPOSER_HOME /composer
 ENV PATH /composer/vendor/bin:$PATH
