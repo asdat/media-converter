@@ -40,5 +40,4 @@ COPY . /docker/php
 RUN composer install --no-autoloader --no-scripts --no-interaction
 RUN composer dump-autoload --no-interaction
 
-RUN supervisord -c /etc/supervisor/conf.d/supervisord.conf
-RUN supervisorctl -c /etc/supervisor/conf.d/supervisord.conf
+ENTRYPOINT supervisord -c /etc/supervisor/conf.d/supervisord.conf
