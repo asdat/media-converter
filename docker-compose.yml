@@ -2,10 +2,18 @@ version: '2'
 services:
   php:
     container_name: php
-    image: karinasergeevna/media-encoder:1.0.2
+    image: karinasergeevna/media-encoder:1.0.3
     volumes:
       - ./output/:/docker/php/output
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/supervisor2/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./.env:/docker/php
     ports:
       - 9001:9001
+    environment:
+      QUEUE_CONNECTION: rabbitmq
+      QUEUE_DRIVER: rabbitmq
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      EXTERNAL_API_URL: http://encode.dev.asdat.org
 
