@@ -7,7 +7,6 @@ services:
       - ./output/:/docker/php/output
       - /var/run/docker.sock:/var/run/docker.sock
       - ./docker/supervisor2/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-      - ./.env:/docker/php/.env
     ports:
       - 9001:9001
     environment:
@@ -24,7 +23,7 @@ services:
       - 5672:5672
       - 15672:15672
     volumes:
-      - /home/encode:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+      - /home/encode/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     environment:
       RABBITMQ_ERLANG_COOKIE: 6085e2412b6fa88647466c6a81c0cea0
       RABBITMQ_DEFAULT_USER: rabbitmq
