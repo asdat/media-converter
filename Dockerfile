@@ -39,4 +39,5 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 COPY . /docker/php
 RUN composer install --no-autoloader --no-scripts --no-interaction
 RUN composer dump-autoload --no-interaction
-RUN supervisord -c /etc/supervisor/conf.d/supervisord.conf &
+
+CMD ["/usr/bin/supervisord"]
