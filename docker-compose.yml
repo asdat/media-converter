@@ -30,3 +30,9 @@ services:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
       RABBITMQ_DEFAULT_VHOST: /
+
+  beanstalkd:
+    image: schickling/beanstalkd:latest
+    restart: always
+    ports:
+      - "11300:11300"
