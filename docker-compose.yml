@@ -2,11 +2,17 @@ version: '2'
 services:
   php:
     container_name: php
-    build: .
+    image: media-encoder:latest
     volumes:
-      - ./:/docker/php
+      - ./output/:/docker/php/output
+      - ./docker/supervisor/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker/supervisor2/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     ports:
       - 9001:9001
+    environment:
+      QUEUE_CONNECTION: rabbitmq
+      QUEUE_DRIVER: rabbitmq
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      EXTERNAL_API_URL: http://encode.dev.asdat.org
 
