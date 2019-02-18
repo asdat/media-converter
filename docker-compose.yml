@@ -10,11 +10,12 @@ services:
     ports:
       - 9001:9001
     environment:
-      QUEUE_CONNECTION: rabbitmq
-      QUEUE_DRIVER: rabbitmq
+      QUEUE_CONNECTION: beanstalkd
+      QUEUE_DRIVER: beanstalkd
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       EXTERNAL_API_URL: http://encode.dev.asdat.org
+      BEANS_HOST: beanstalkd
 
   rabbitmq:
     container_name: rabbitmq
@@ -32,6 +33,7 @@ services:
       RABBITMQ_DEFAULT_VHOST: /
 
   beanstalkd:
+    container_name: beanstalkd
     image: schickling/beanstalkd:latest
     restart: always
     ports:
