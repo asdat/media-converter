@@ -2,8 +2,9 @@ version: '2'
 services:
   php:
     container_name: php
-    image: media-encoder:latest
+    build: .
     volumes:
+      - ./:/docker/php
       - ./output/:/docker/php/output
       - ./docker/supervisor/conf.d/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
       - /var/run/docker.sock:/var/run/docker.sock
