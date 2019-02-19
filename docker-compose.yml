@@ -38,3 +38,6 @@ services:
     restart: always
     ports:
       - "11300:11300"
+
+  gearman:
+    image: kendu/gearman
