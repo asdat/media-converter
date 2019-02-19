@@ -18,12 +18,15 @@ RUN apt-get update \
         libgearman-dev \
     && rm -r /var/lib/apt/lists/*
 
+RUN apt-get update
+
 # install swoole
 #RUN pecl install swoole
-RUN cd /root && pecl download swoole && \
-    tar -zxvf swoole-1* && cd swoole-1* && \
-    phpize && \
-    ./configure --enable-openssl  --enable-http2  --enable-async-redis && \
+RUN cd /tmp && wget https://pecl.php.net/get/swoole-4.2.9.tgz && \
+    tar zxvf swoole-4.2.9.tgz && \
+    cd swoole-4.2.9  && \
+    phpize  && \
+    ./configure  --enable-openssl && \
     make && make install
 RUN docker-php-ext-enable swoole
 
