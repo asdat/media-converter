@@ -17,8 +17,8 @@ RUN apt-get update \
 
 # PHP Extension: Gearman
 # Download Gearman PECL extension for Gearman supporting PHP 7
-RUN apt-get -y --allow-unauthenticated install \
-    libgearman-dev
+RUN apt-get install -y libgearman-dev
+
 RUN cd /tmp \
     && git clone https://github.com/wcgallego/pecl-gearman.git \
     && cd pecl-gearman \
