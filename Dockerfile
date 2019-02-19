@@ -17,6 +17,7 @@ RUN apt-get update \
         libgearman7 \
         libgearman-dev \
     && rm -r /var/lib/apt/lists/*
+    && pecl install swoole
 
 RUN cd /tmp \
     && git clone https://github.com/wcgallego/pecl-gearman.git \

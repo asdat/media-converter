@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46d397a3679ba18facabadc884e7f083",
+    "content-hash": "3eacbc96a796cb26b08edc5e33bbac1f",
     "packages": [
         {
             "name": "demi/php-gearman",
@@ -1580,6 +1580,63 @@
             "description": "The Illuminate View package.",
             "homepage": "https://laravel.com",
             "time": "2018-11-02T14:57:34+00:00"
+        },
+        {
+            "name": "jiyis/laravel-nsq",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jiyis/laravel-nsq.git",
+                "reference": "d62708f02a593fcd32b17cedf511765308d26979"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jiyis/laravel-nsq/zipball/d62708f02a593fcd32b17cedf511765308d26979",
+                "reference": "d62708f02a593fcd32b17cedf511765308d26979",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^5.1",
+                "illuminate/queue": "^5.1",
+                "illuminate/support": "^5.1",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "illuminate/events": "^5.1",
+                "mockery/mockery": "~1.0",
+                "phpunit/phpunit": "~7.0"
+            },
+            "suggest": {
+                "ext-swoole": "Event-driven asynchronous & concurrent & coroutine networking engine with high performance for PHP."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Jiyis\\Nsq\\NsqQueueServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jiyis\\Nsq\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gary F Dong",
+                    "email": "425995717@qq.com"
+                }
+            ],
+            "description": "Nsq driver for Laravel Queue",
+            "time": "2018-08-01T07:51:37+00:00"
         },
         {
             "name": "laravel/lumen-framework",
