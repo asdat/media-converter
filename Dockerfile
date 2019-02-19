@@ -16,7 +16,7 @@ RUN apt-get update \
         gearman-job-server \
         libgearman7 \
         libgearman-dev \
-        wget
+        wget \
     && rm -r /var/lib/apt/lists/*
 
 RUN apt-get update
