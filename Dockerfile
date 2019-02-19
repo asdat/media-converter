@@ -13,14 +13,10 @@ RUN apt-get update \
         unzip \
         python \
         supervisor \
+        gearman-job-server \
+        libgearman7 \
+        libgearman-dev \
     && rm -r /var/lib/apt/lists/*
-
-# PHP Extension: Gearman
-# Download Gearman PECL extension for Gearman supporting PHP 7
-RUN apt-get install -y \
-    gearman-job-server \
-    libgearman7 \
-    libgearman-dev \
     && docker-php-ext-enable gearman
 
 # Copy ffmpeg bins
