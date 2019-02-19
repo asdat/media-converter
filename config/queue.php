@@ -47,6 +47,14 @@ return [
             'retry_after' => 90,
         ],
 
+        'gearman' => [
+            'driver' => 'gearman',
+            'host'   => env('GEARMAN_HOST', 'localhost'),
+            'queue'  => 'default',
+            'port'   => 4730,
+            'timeout' => 1000, //milliseconds
+        ],
+
         'sqs' => [
             'driver' => 'sqs',
             'key' => 'your-public-key',

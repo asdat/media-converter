@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4a86940446b06a4ebefdf52fbdf829a",
+    "content-hash": "68ed34d6cd18c6e084ed370c3ea31e90",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1854,6 +1854,43 @@
                 "serialize"
             ],
             "time": "2019-01-06T22:07:38+00:00"
+        },
+        {
+            "name": "pafelin/gearman",
+            "version": "0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pafelin/laravel-gearman.git",
+                "reference": "7eeb07942e2e09aee50e23649f8703e5bebd8c69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pafelin/laravel-gearman/zipball/7eeb07942e2e09aee50e23649f8703e5bebd8c69",
+                "reference": "7eeb07942e2e09aee50e23649f8703e5bebd8c69",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Pafelin\\Gearman": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Genov",
+                    "email": "pavel@taskprocess.com"
+                }
+            ],
+            "description": "Gearman provider for queues in laravel4",
+            "time": "2017-07-27T10:09:07+00:00"
         },
         {
             "name": "pda/pheanstalk",
