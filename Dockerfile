@@ -17,17 +17,10 @@ RUN apt-get update \
 
 # PHP Extension: Gearman
 # Download Gearman PECL extension for Gearman supporting PHP 7
-RUN apt-get install -y libgearman-dev
-
-RUN cd /tmp \
-    && git clone https://github.com/wcgallego/pecl-gearman.git \
-    && cd pecl-gearman \
-    && git checkout gearman-2.0.3 \
-    && phpize \
-    && ./configure \
-    && make -j$(nproc) \
-    && make install \
-    && rm -r /tmp/pecl-gearman \
+RUN apt-get install -y \
+    gearman-job-server \
+    libgearman7 \
+    libgearman-dev \
     && docker-php-ext-enable gearman
 
 # Copy ffmpeg bins
