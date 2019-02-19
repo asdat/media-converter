@@ -15,6 +15,21 @@ RUN apt-get update \
         supervisor \
     && rm -r /var/lib/apt/lists/*
 
+RUN apt-get -y --allow-unauthenticated install libgearman-dev wget unzip \
+    && cd /tmp \
+    && wget https://github.com/wcgallego/pecl-gearman/archive/gearman-2.0.3.zip \
+    && unzip gearman-2.0.3.zip \
+    && mv pecl-gearman-gearman-2.0.3 pecl-gearman \
+    && cd pecl-gearman \
+    && phpize \
+    && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && cd / \
+    && rm /tmp/gearman-2.0.3.zip \
+    && rm -r /tmp/pecl-gearman \
+    && docker-php-ext-enable gearman
+
 # Copy ffmpeg bins
 COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
 
