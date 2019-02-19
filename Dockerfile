@@ -17,7 +17,6 @@ RUN apt-get update \
         libgearman7 \
         libgearman-dev \
     && rm -r /var/lib/apt/lists/*
-    && docker-php-ext-enable gearman
 
 # Copy ffmpeg bins
 COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
@@ -28,7 +27,8 @@ COPY docker/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisor
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install sockets
+    && docker-php-ext-install sockets \
+    && docker-php-ext-enable gearman
 
 # Composer
 ENV COMPOSER_HOME /composer
