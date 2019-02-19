@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68ed34d6cd18c6e084ed370c3ea31e90",
+    "content-hash": "46d397a3679ba18facabadc884e7f083",
     "packages": [
+        {
+            "name": "demi/php-gearman",
+            "version": "1.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/demisang/php-gearman.git",
+                "reference": "8efb9389c6f9e1b56923fc35075b1b0ddffe3366"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/demisang/php-gearman/zipball/8efb9389c6f9e1b56923fc35075b1b0ddffe3366",
+                "reference": "8efb9389c6f9e1b56923fc35075b1b0ddffe3366",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "ext-gearman": "PHP Gearman extension for running workers"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "demi\\gearman\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Orlov",
+                    "email": "gnasimed@gmail.com",
+                    "homepage": "https://orlov.io/",
+                    "role": "Creator"
+                }
+            ],
+            "description": "Gearman job server workers helper",
+            "homepage": "https://github.com/demisang/php-gearman#readme",
+            "keywords": [
+                "Yii1",
+                "gearman",
+                "job",
+                "laravel",
+                "php",
+                "server",
+                "supervisor",
+                "workers",
+                "yii2"
+            ],
+            "time": "2018-01-29T18:55:17+00:00"
+        },
         {
             "name": "doctrine/inflector",
             "version": "v1.3.0",

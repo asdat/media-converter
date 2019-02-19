@@ -82,7 +82,7 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
-$app->register(Pafelin\Gearman\GearmanServiceProvider::class);
+$app->register(demi\gearman\laravel5\GearmanServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
