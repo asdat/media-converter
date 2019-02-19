@@ -15,20 +15,20 @@ RUN apt-get update \
         supervisor \
     && rm -r /var/lib/apt/lists/*
 
-ENV GEARMAN_VERSION=2.0.3
-RUN set -xe \
-    ; apt-get -y install libgearman-dev \
-    ; TMPDIR=$(mktemp -d) \
-    ; cd $TMPDIR \
-    ; curl -L https://github.com/wcgallego/pecl-gearman/archive/gearman-${GEARMAN_VERSION}.tar.gz \
-    | tar xzv --strip 1 \
-    ; phpize \
-    ; ./configure \
-    ; make -j$(nproc) \
-    ; make install \
-    ; cd - \
-    ; rm -r $TMPDIR \
-    ; docker-php-ext-enable gearman
+# PHP Extension: Gearman
+# Download Gearman PECL extension for Gearman supporting PHP 7
+RUN apt-get -y --allow-unauthenticated install \
+    libgearman-dev
+RUN cd /tmp \
+    && git clone https://github.com/wcgallego/pecl-gearman.git \
+    && cd pecl-gearman \
+    && git checkout gearman-2.0.3 \
+    && phpize \
+    && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && rm -r /tmp/pecl-gearman \
+    && docker-php-ext-enable gearman
 
 # Copy ffmpeg bins
 COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
