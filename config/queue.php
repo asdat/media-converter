@@ -47,14 +47,14 @@ return [
             'retry_after' => 90,
         ],
 
-        'gearman' => [
+        /*'gearman' => [
             'driver' => 'gearman',
             'host'   => env('GEARMAN_HOST', 'localhost'),
             'queue'  => 'default',
             'port'   => 4730,
             'timeout' => 1000, //milliseconds
-        ],
-
+        ],*/
+        
         'nsq' => [
             'driver' => 'nsq',
             'queue' => 'default',
