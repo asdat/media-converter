@@ -83,6 +83,7 @@ $app->singleton(
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 // $app->register(demi\gearman\laravel5\GearmanServiceProvider::class);
+$app->register(Jiyis\Nsq\NsqQueueServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

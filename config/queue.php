@@ -54,10 +54,12 @@ return [
             'port'   => 4730,
             'timeout' => 1000, //milliseconds
         ],*/
-        
+
         'nsq' => [
             'driver' => 'nsq',
             'queue' => 'default',
+            'host' => env('NSQ_HOST', '127.0.0.1'),
+            'port' => env('NSQ_PORT', 9150),
 
             /*
              |--------------------------------------------------------------------------
