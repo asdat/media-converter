@@ -19,7 +19,7 @@ RUN apt-get update \
         wget \
     && rm -r /var/lib/apt/lists/* \
     && pecl install swoole \
-    && docker-php-ext-enable swoole \
+    && docker-php-ext-enable swoole 
 
 # Gearman
 RUN cd /tmp \
