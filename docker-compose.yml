@@ -10,13 +10,15 @@ services:
     ports:
       - 9001:9001
     environment:
-      QUEUE_CONNECTION: gearman
-      QUEUE_DRIVER: gearman
+      QUEUE_CONNECTION: nsq
+      QUEUE_DRIVER: nsq
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       EXTERNAL_API_URL: http://encode.dev.asdat.org
       BEANS_HOST: beanstalkd
       GEARMAN_HOST: gearman
+      NSQSD_URL: nsq:4150
+      NSQLOOKUP_URL: nsq:4161
 
   rabbitmq:
     container_name: rabbitmq
