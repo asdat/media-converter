@@ -19,7 +19,7 @@ RUN apt-get update \
 COPY --from=mwader/static-ffmpeg:4.1 /ffmpeg /ffprobe /usr/local/bin/
 
 # Copy supervisord config
-COPY docker/supervisor2/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # PHP Extensions
 RUN docker-php-ext-install -j$(nproc) zip \
