@@ -3,3 +3,6 @@
 Homestead.json
 Homestead.yaml
 .env
+/output
+supervisord.log
+supervisord.pid
